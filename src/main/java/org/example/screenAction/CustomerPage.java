@@ -2,6 +2,7 @@ package org.example.screenAction;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import static org.junit.Assert.*;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -11,33 +12,42 @@ import java.time.Duration;
 
 public class CustomerPage {
     private static WebDriver driver;
+    static ElementDefine elementDefine = new ElementDefine();
+    static String firstName = "//input[@name='first_name']";
+    static String agreeCheckbox = "//input[@name='consent']";
+    static String btnEnterRoom = "//input[@value='Enter Waiting Room']";
+    static String continueBrowser = "//*[contains(text(), 'Continue on this browser')]";
+    static String continueBtn = "//button[contains(text(), 'Continue')]";
+    static String endVideoBtn = "//div[@class='toolbox-icon   hangup-button']";
+    static String endVisitBtn = "//a[contains(text(),'End Visit')]";
+    static String chatTxt = "//div[@class='webchat-message-bubble']";
+
 
     public CustomerPage(WebDriver driver) {
         this.driver = driver;
     }
     public static void navigateTo(String url) {
         driver.get(url);
-//        new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.presenceOfElementLocated(messageInputField));
     }
 
-    public static void login(String name) throws InterruptedException {
-     //   driver.findElement(By.xpath("//*[contains(text(), 'For Providers')]")).click();
-        driver.findElement(By.xpath("//input[@name='first_name']")).sendKeys(name);
-        driver.findElement(By.xpath("//input[@name='consent']")).click();
+    public static void submitCustomerRequest(String name) throws InterruptedException {
+        Thread.sleep(500);
+        elementDefine.getElement(driver,firstName).click();
+        elementDefine.getElement(driver,firstName).sendKeys(name);
+        elementDefine.getElement(driver,agreeCheckbox).click();
+        elementDefine.getElement(driver,btnEnterRoom).click();
+        elementDefine.getElement(driver,continueBrowser).click();
+        Thread.sleep(500);
+    }
 
+    public static void endCall(){
+        driver.switchTo().frame(0);
+        elementDefine.getElement(driver,endVideoBtn).click();
+        driver.switchTo().defaultContent();
+        elementDefine.getElement(driver,endVisitBtn).click();
+    }
 
-        driver.findElement(By.xpath("//input[@value='Enter Waiting Room']")).click();
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(50));
-        // Chờ cho phần tử Continue to browser
-        WebElement elementContinue = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"content\"]/div[1]/div[2]/div[1]/img")));
-        elementContinue.click();
-        WebElement element2 = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"ReminderModal\"]/div/div/div[3]/button")));
-        element2.click();
-
-   //     WebElement elementJoinNow = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[text()='Join Now']")));
-    //       elementJoinNow.click();
-
-//        driver.findElement(passwordField).sendKeys(password);
-//        driver.findElement(loginButton).click();
+    public static void verifyMessageFromProvider(String message){
+        assertEquals(elementDefine.getElement(driver,chatTxt).getText(),message);
     }
 }
