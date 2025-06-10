@@ -30,8 +30,8 @@ public class Hooks {
                 providerBrowser = new BaseDriver();
 
                 // Khởi tạo Page Objects với các driver tương ứng
-                customerPage = new CustomerPage(customerBrowser.getDriver());
-                providerPage = new ProviderPage(providerBrowser.getDriver());
+                customerPage = new CustomerPage(customerBrowser.getDriver( "chrome" ));
+                providerPage = new ProviderPage(providerBrowser.getDriver("chrome"));
             }
 //
         }
